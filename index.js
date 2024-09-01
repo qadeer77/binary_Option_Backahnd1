@@ -25,17 +25,17 @@ admin.initializeApp({
 });
 
 app.post('/send-notification', (req, res) => {
-    const { token, title, body } = req.body;
+    const { token, message } = req.body;
 
-    const message = {
+    const notificationMessage = {
         notification: {
-            title: title || 'Default Title',
-            body: body || 'Default Body',
+            title: message.title,
+            body: message.body,
         },
         token: token,
     };
 
-    admin.messaging().send(message)
+    admin.messaging().send(notificationMessage)
         .then((response) => {
             console.log('Successfully sent message:', response);
             res.status(200).send({ success: true, response });
@@ -45,6 +45,7 @@ app.post('/send-notification', (req, res) => {
             res.status(500).send({ success: false, error });
         });
 });
+
 
 const PORT = 5000;
 app.listen(PORT, () => {
