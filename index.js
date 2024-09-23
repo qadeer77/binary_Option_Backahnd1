@@ -46,6 +46,28 @@ app.post('/send-notification', (req, res) => {
         });
 });
 
+app.post('/send-notification-multiple', (req, res) => {
+    const { tokens, message } = req.body;
+
+    const notificationMessage = {
+        notification: {
+            title: message.title,
+            body: message.body,
+        },
+        tokens: tokens,
+    };
+
+    admin.messaging().sendEachForMulticast(notificationMessage)
+        .then((response) => {
+            console.log('Successfully sent messages:', response);
+            res.status(200).send({ success: true, response });
+        })
+        .catch((error) => {
+            console.error('Error sending messages:', error);
+            res.status(500).send({ success: false, error });
+        });
+});
+
 
 const PORT = 5000;
 app.listen(PORT, () => {
